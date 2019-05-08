@@ -46,7 +46,7 @@ router.get('/:universityId', (req, res, next)=>{
 });
 router.post('/',(req, res, next)=>{
         const university = new University ({
-            _id: new mongoose.Schema.Types.ObjectId(),
+            // _id: new mongoose.Schema.Types.ObjectId(),
             code: req.body.code,
             nameVN: req.body.nameVN,
             nameEN: req.body.nameEN,
@@ -69,39 +69,37 @@ router.post('/',(req, res, next)=>{
         });
     })
 });
-router.patch('/:universityId', (req, res, next) =>{
-    const id = req.params.universityId;
-    const updateOps ={};
-    for (const ops of req.body){
-        updateOps[ops.propName] = ops.value;
-    }
-    University.update({code: id}, {$set: updateOps })
-        .exec()
-        .then(result =>{
-            res.status(200).json({
-                message: 'UNIVERSITY UPDATED',
-                request:{
-                    type: 'GET',
-                    url: 'http://localhost:3009/school' + id
-                }
-            })
-        })
-        .catch(err =>{
-            res.status(500).json({error: err});
-        })
-});
+// router.patch('/:universityId', (req, res, next) =>{
+//     const id = req.params.universityId;
+//     const updateOps ={};
+//     for (const ops of req.body){
+//         updateOps[ops.propName] = ops.value;
+//     }
+//     University.update({code: id}, {$set: updateOps })
+//         .exec()
+//         .then(result =>{
+//             res.status(200).json({
+//                 message: 'UNIVERSITY UPDATED',
+//                 request:{
+//                     type: 'GET',
+//                     url: 'http://localhost:3009/school' + id
+//                 }
+//             })
+//         })
+//         .catch(err =>{
+//             res.status(500).json({error: err});
+//         })
+// });
 router.delete('/:universityId', (req, res, next) =>{
     const id = req.params.universityId;
-    University.remove({code: id})
-        .exec()
-        .then( res =>{
-            res.status(200).json(result =>{
-                console.log(result);
+    University.remove({_id: id})
+        .then(() =>{
+            res.status(201).json({
+                message:"DELETE SUCCESSFUL",
+            })
+        .catch(err =>{
+             res.status(500).json({error: err})
             });
         })
-        .catch(err =>{
-            res.status(500).json({error: err});
-        })
 });
-
 module.exports = router;
