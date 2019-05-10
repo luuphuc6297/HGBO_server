@@ -8,8 +8,18 @@ let Major = mongoose.model('Major');
 router.use('/insert', require('./insert'));
 
 router.get('/', async (req, res, next) =>{
-    let major = await Major.find({}).exec();
-    return send.success(res,'HANDLING GET REQUEST TO /major', major);
+    let page = parseInt (req.query.page);
+    let limit = parseInt(req.query.limit);
+
+    Major.paginate({page: page, limit: limit}).exec()
+        .then(doc =>{
+            return send.success(res,'HANDLING GET REQUEST TO /major', doc);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({error: err})
+        });
+
 });
 
 router.get('/:majorId', (req, res, next) =>{
@@ -18,16 +28,6 @@ router.get('/:majorId', (req, res, next) =>{
         .then(response =>{
             return send.success(res , 'HANDING GET REQUEST TO /major/uni', response);
         })
-        // .then(doc =>{
-        //     console.log((doc));
-        //     if (doc) {
-        //         res.status(200).json({
-        //             massage: "GET SUCCESSFUL"
-        //         })
-        //     }else {
-        //         res.status(404).json({})
-        //     }
-        // })
         .catch(err =>{
             console.log(err);
             res.status(500).json({error: err});
@@ -38,27 +38,50 @@ router.post('/',(req, res, next) =>{
         _id: new mongoose.Types.ObjectId(),
         uni: req.body.uni,
         year: req.body.year,
+        fee: req.body.fee,
         mjs: req.body.mjs
     });
-    major.save()
-        .then(result => {
-        console.log(result);
+    Major.paginate({uni: major.uni})
+        .then(respone => {
+        console.log(respone);
+        if(respone.total >0){
+            res.status(201).json({
+                message: "EXIST CODE"
+            })
+        }
+        else {major.save()
+            .then(result =>{
+                console.log(result);
+                res.status(201).json({
+                    message: "CREATED MAJOR",
+                    createdMajor: Major
+                })
+            .catch(err =>{
+                console.log(err);
+                res.status(500).json({error: err})
+                })
+            })
+        }
     })
-        .catch(err => {
+    .catch(err => {
             console.log(err);
             res.status(500).json({
                 error: err
-            });
         });
-    res.status(201).json({
-        message: "POST SUCCESS",
-        createdMajor: Major
     });
 });
-router.delete('/:majorId', (req,res,next)=>{
-    res.status(200).json({
-        message:"DELETE SUCCESSFUL"
-    })
+router.delete('/majorId', (req, res, next)=>{
+    const id = req.params.majorId
+    Major.remove({_id: id})
+        .then(result =>{
+            console.log(result);
+            res.status(201).json({
+                message: "DELETE SUCCESSFUL"
+            })
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({error: err})
+        })
 });
-
 module.exports = router;

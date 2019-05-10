@@ -5,6 +5,7 @@ let majorSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
    uni: {type: String, index: true},
    year: String,
+   fee: String,
    mjs: []
 });
 majorSchema.method.JSONor = function () {

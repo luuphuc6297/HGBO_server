@@ -2,10 +2,11 @@ const  mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
 let universitySchema =  mongoose.Schema({
-    // _id: mongoose.Schema.Types.ObjectId,
     code: {type: String, trim: true, unique: true, index: true},
     nameVN: {type: String, index: true},
     nameEN: {type: String, index: true},
+    cateName: {type: String, index: true},
+    type: {type: Number, index: true},
     logo: String,
     year: String,
     address: String,

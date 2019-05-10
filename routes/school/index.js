@@ -6,10 +6,10 @@ let University = mongoose.model('University');
 router.use('/insert', require('./insert'));
 
 router.get('/', (req, res, next) => {
-    // let page = parseInt (req.query.page);
-    // let limit = parseInt(req.query.limit);
+    let page = parseInt (req.query.page);
+    let limit = parseInt(req.query.limit);
 
-    University.find({})
+    University.paginate({page: page, limit: limit})
         .then(doc => {
         return  send.success(res, 'HANDLING GET REQUEST TO /school', doc);
     })
@@ -33,13 +33,13 @@ router.get('/:universityId', (req, res, next)=>{
 router.post('/',(req, res,next)=>{
     const university =  new University({
         code: req.body.code,
-            nameVN: req.body.nameVN,
-            nameEN: req.body.nameEN,
-            logo: req.body.logo,
-            year: req.body.year,
-            address: req.body.address,
-            weblink: req.body.weblink,
-            uni: req.body.uni
+        nameVN: req.body.nameVN,
+        nameEN: req.body.nameEN,
+        logo: req.body.logo,
+        year: req.body.year,
+        address: req.body.address,
+        weblink: req.body.weblink,
+        uni: req.body.uni
     });
     University.paginate({code: university.code})
         .then(response => {
@@ -56,9 +56,9 @@ router.post('/',(req, res,next)=>{
                         message:"CREATED UNIVERSITY",
                         createUniversity: University
                     })
-                        .catch(err =>{
-                            console.log(err);
-                            res.status(500).json({error: err})
+            .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({error: err})
                     });
                 })
             }
