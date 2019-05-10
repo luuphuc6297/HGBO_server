@@ -21,7 +21,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:universityId', (req, res, next)=>{
     const id = req.params.universityId;
-    University.paginate({code: id})
+    University.find({code: id})
         .then(response => {
             return  send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
         })
@@ -41,31 +41,23 @@ router.post('/',(req, res,next)=>{
         weblink: req.body.weblink,
         uni: req.body.uni
     });
-    University.paginate({code: university.code})
+    University.findOne({code: university.code})
         .then(response => {
-            console.log(response);
-            if (response.total > 0){
-                res.status(201).json({
-                     message: "EXIST CODE"
-                 })
+            if (response){
+               return send.fail(res, 'EXIST CODE')
             }
-            else {university.save()
-            .then(result =>{
-                    console.log(result);
-                    res.status(201).json({
-                        message:"CREATED UNIVERSITY",
-                        createUniversity: University
+            else {
+                university.save()
+                    .then(result => {
+                        return send.success(res, 'CREATE SUCCESSFUL', result)
                     })
-            .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({error: err})
-                    });
-                })
+                    .catch(err => {
+                        return send.error(res, 'Lỗi bự', err)
+                    })
             }
         })
         .catch(err =>{
-            console.log(err);
-            res.status(500).json({error: err})
+           return send.success(res, "SOME THING WRONG", err)
     });
 });
 // router.patch('/:universityId', (req, res, next) =>{

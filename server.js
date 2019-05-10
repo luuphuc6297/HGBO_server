@@ -25,6 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 require('./models/University');
 require('./models/Major');
+require('./models/User');
+
 let routes = require('./routes');
 app.use('/', routes);
 app.use((req, res, next)=> {

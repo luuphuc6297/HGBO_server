@@ -2,15 +2,13 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
 let majorSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-   uni: {type: String, index: true},
+   uni: {type: String, unique: true, index: true},
    year: String,
    fee: String,
    mjs: []
 });
 majorSchema.method.JSONor = function () {
     return{
-        _id: this._id,
         uni: this.uni,
         year: this.year,
         mjs: this.mjs
