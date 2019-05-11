@@ -26,12 +26,6 @@ const send = {
             data: err
         })
     },
-     notfound: (res, message, err) =>{
-        res.status(404).json({
-            message,
-            data: err
-        })
-     }
 };
 
 module.exports = send;

@@ -52,7 +52,7 @@ router.post('/',(req, res,next)=>{
                         return send.success(res, 'CREATE SUCCESSFUL', result)
                     })
                     .catch(err => {
-                        return send.error(res, 'Lỗi bự', err)
+                        return send.error(res, 'SOME THING WRONG', err)
                     })
             }
         })
@@ -60,27 +60,6 @@ router.post('/',(req, res,next)=>{
            return send.success(res, "SOME THING WRONG", err)
     });
 });
-// router.patch('/:universityId', (req, res, next) =>{
-//     const id = req.params.universityId;
-//     const updateOps ={};
-//     for (const ops of req.body){
-//         updateOps[ops.propName] = ops.value;
-//     }
-//     University.update({code: id}, {$set: updateOps })
-//         .exec()
-//         .then(result =>{
-//             res.status(200).json({
-//                 message: 'UNIVERSITY UPDATED',
-//                 request:{
-//                     type: 'GET',
-//                     url: 'http://localhost:3009/school' + id
-//                 }
-//             })
-//         })
-//         .catch(err =>{
-//             res.status(500).json({error: err});
-//         })
-// });
 router.delete('/:universityId', (req, res, next) =>{
     const id = req.params.universityId;
     University.remove({_id: id})
