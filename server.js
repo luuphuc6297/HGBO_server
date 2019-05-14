@@ -3,7 +3,7 @@ const   http = require('http');
         path = require('path');
         mongoose = require('mongoose');
         bodyParser = require('body-parser');
-
+        cookieParser = require('cookie-parser');
 // Create global app object
 const app = express();
 //Connect to mongodb
@@ -20,12 +20,11 @@ app.use(require('morgan')('dev'));
 //Setup bodyParser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 require('./models/University');
 require('./models/Major');
-require('./models/User');
 
 let routes = require('./routes');
 app.use('/', routes);
@@ -53,7 +52,7 @@ app.use (function (req, res, next) {
         res.status(error.status || 500);
         res.json({
                 error: {
-                   message: error.message
+                        message: error.message
                 }
         });
 });
