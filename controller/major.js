@@ -64,7 +64,6 @@ exports.Maj_post = (req, res, next) =>{
         .catch(err => {
             return send.error(res, "FAIL SOME THING", err)});
 };
-
 exports.Maj_delete =(req, res, next)=>{
     const id = req.param('majorId');
     Major.remove({_id: id})

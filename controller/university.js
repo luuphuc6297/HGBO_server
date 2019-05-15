@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const paginate = require('mongoose-paginate');
 const send = require('../routes/send');
 let University = mongoose.model('University');
-
+let Major = mongoose.model('Major');
 
 exports.Uni_get_all = (req, res, next) => {
     let page = parseInt (req.query.page);
@@ -39,11 +39,6 @@ exports.Uni_get_name_uni = (req, res, next ) =>{
     })
 };
 
-exports.Uni_get_name_year = (req, res, next) =>{
-    let id = req.param('universityId');
-    let idy = req.param('universityYear');
-};
-
 exports.Uni_post = (req, res,next)=>{
     const university =  new University({
         code: req.body.code,
@@ -74,6 +69,7 @@ exports.Uni_post = (req, res,next)=>{
             return send.success(res, "SOME THING WRONG", err)
         });
 };
+
 exports.Uni_delete = (req, res, next) =>{
     const id = req.param('universityId');
     University.remove({_id: id})
@@ -87,5 +83,33 @@ exports.Uni_delete = (req, res, next) =>{
         })
 };
 
+exports.Uni_get_name_uni_major = (req, res, next) =>{
+    const code = req.param('universityId');
+    const year = req.param('majorYear');
+    University.aggregate([
+        {
+            $match: {code: code}
+        },
+        {
+            $lookup:
+            {
+                from: "majors",
+                // localField: "code",
+                // foreignField: "uni",
+                pipeline: [
+                    { $match: {uni: code, year: year}},
+                ],
+                as: "Major_info"
+            }
+        },
 
-
+    ]).exec((err, result) =>{
+        if(err) {
+            console.log(err);
+            return send.fail(res, "FAIL ME ROI", err)
+        }else {
+            console.log(result);
+            return send.success(res, "THANH CONG ROI", result)
+        }
+    })
+};
