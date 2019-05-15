@@ -18,7 +18,7 @@ exports.Uni_get_all = (req, res, next) => {
 };
 
 exports.Uni_get_id =  (req, res, next)=>{
-    const id = req.params.universityId;
+    const id = req.param('universityId');
     University.find({code: id})
         .then(response => {
             return  send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
@@ -29,14 +29,19 @@ exports.Uni_get_id =  (req, res, next)=>{
 };
 exports.Uni_get_name_uni = (req, res, next ) =>{
     let nameVN = req.params.name;
-    nameVN = nameVN.replace('-', ' ');
+    // nameVN = nameVN.replace('-', ' ');
     University.find({$text:{$search: `\"${nameVN}\"`}})
         .then((result) =>{
             res.status(201).json(result)
-                .catch(err =>{
-                    res.status(500).json({error: err})
-                });
-        })
+        .catch(err =>{
+            res.status(500).json({error: err})
+            });
+    })
+};
+
+exports.Uni_get_name_year = (req, res, next) =>{
+    let id = req.param('universityId');
+    let idy = req.param('universityYear');
 };
 
 exports.Uni_post = (req, res,next)=>{
@@ -70,7 +75,7 @@ exports.Uni_post = (req, res,next)=>{
         });
 };
 exports.Uni_delete = (req, res, next) =>{
-    const id = req.params.universityId;
+    const id = req.param('universityId');
     University.remove({_id: id})
         .then(() =>{
             res.status(201).json({

@@ -16,17 +16,29 @@ exports.Maj_get_all = async (req, res, next) =>{
             return send.error(res, "SOME THING WRONG", err)
         });
 };
-exports.Maj_get_id = (req, res, next) =>{
-    const id = req.params.majorId;
-    Major.findOne({uni: id})
-        .then(response =>{
-            return send.success(res , 'HANDING GET REQUEST TO /major/uni', response);
-        })
-        .catch(err =>{
-            return send.error(res, "SOME THING WRONG", err);
-        });
-};
 
+exports.Major_get_id_and_year = (req, res, next) =>{
+    const id = req.param('majorId');
+    const idy = req.param('majorYear');
+    if (idy){
+        Major.find({uni: id, year: idy})
+            .then(response =>{
+                return send.success(res, "GET MAJOR AND YEAR SUCCESSFUL", response)
+            })
+            .catch(err=>{
+                return send.fail(errors, "FAIL SOME THING", err)
+        })
+    }
+    else {
+        Major.find({uni: id})
+            .then(response =>{
+                return send.success(res, "GET MAJOR AND YEAR SUCCESSFUL", response)
+            })
+            .catch(err=>{
+                return send.fail(errors, "FAIL SOME THING", err)
+        })
+    }
+};
 exports.Maj_post = (req, res, next) =>{
     const major = new Major({
         uni: req.body.uni,
@@ -35,9 +47,9 @@ exports.Maj_post = (req, res, next) =>{
         mjs: req.body.mjs
     });
     Major.findOne({year: major.year})
-        .then(respone => {
-            if(respone){
-                return send.fail(res, "EXIST YEAR UPDATE", respone);
+        .then(response => {
+            if(response){
+                return send.fail(res, "EXIST YEAR UPDATE", response);
             }
             else {
                 major.save()
@@ -45,7 +57,7 @@ exports.Maj_post = (req, res, next) =>{
                         return send.success(res, "CREATE MAJOR SUCCESSFUL", result)
                     })
                     .catch(err =>{
-                        return send.error(res, "WRONG SOMETHING", err)
+                        return send.error(res, "SOME THING WRONG", err)
                     })
             }
         })
@@ -54,7 +66,7 @@ exports.Maj_post = (req, res, next) =>{
 };
 
 exports.Maj_delete =(req, res, next)=>{
-    const id = req.params.majorId
+    const id = req.param('majorId');
     Major.remove({_id: id})
         .then(result =>{
             return send.success(res, "DELETE SUCCESSFUL", result)
