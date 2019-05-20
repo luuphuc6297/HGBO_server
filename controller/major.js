@@ -8,7 +8,7 @@ exports.Maj_get_all = async (req, res, next) =>{
     let page = parseInt (req.query.page);
     let limit = parseInt(req.query.limit);
 
-    Major.paginate({page: page, limit: limit})
+    Major.paginate({}, {page: page, limit: limit})
         .then(doc =>{
             return send.success(res,'HANDLING GET REQUEST TO /major', doc);
         })

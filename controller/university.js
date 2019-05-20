@@ -8,7 +8,7 @@ exports.Uni_get_all = (req, res, next) => {
     let page = parseInt (req.query.page);
     let limit = parseInt(req.query.limit);
 
-    University.paginate({page: page, limit: limit})
+    University.paginate({}, {page: page, limit: limit})
         .then(doc => {
             return  send.success(res, 'HANDLING GET REQUEST TO /school', doc);
         })
@@ -16,7 +16,6 @@ exports.Uni_get_all = (req, res, next) => {
             return send.error(res, 'SOME THING WRONG', err)
         });
 };
-
 exports.Uni_get_id =  (req, res, next)=>{
     const id = req.param('universityId');
     University.find({code: id})
@@ -27,6 +26,7 @@ exports.Uni_get_id =  (req, res, next)=>{
             return send.error(errors, "SOME THING WRONG", err);
         });
 };
+
 exports.Uni_get_name_uni = (req, res, next ) =>{
     let nameVN = req.params.name;
     // nameVN = nameVN.replace('-', ' ');
@@ -102,14 +102,13 @@ exports.Uni_get_name_uni_major = (req, res, next) =>{
                 as: "Major_info"
             }
         },
-
     ]).exec((err, result) =>{
         if(err) {
             console.log(err);
-            return send.fail(res, "FAIL ME ROI", err)
+            return send.fail(res, "FAIL SOME THING", err)
         }else {
             console.log(result);
-            return send.success(res, "THANH CONG ROI", result)
+            return send.success(res, "SUCCESSFUL", result)
         }
     })
 };

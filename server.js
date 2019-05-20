@@ -4,14 +4,18 @@ const   http = require('http');
         mongoose = require('mongoose');
         bodyParser = require('body-parser');
         cookieParser = require('cookie-parser');
+        passport = require('passport');
+        session = require('express-session');
+
 // Create global app object
 const app = express();
+
 //Connect to mongodb
 // mongoose.connect ('mongodb://localhost:27017/schoolData', {useNewUrlParser: true});
-mongoose.connect(
-    'mongodb+srv://luuphuc:luuphuc@hgbocluster-iirfd.mongodb.net/universityData?retryWrites=true', {useNewUrlParser: true}
-);
-//View engine setup
+const data = require('./config/config');
+mongoose.connect(data.MongoURI, {useNewUrlParser: true});
+
+//EJS
 app.set('view engine', 'ejs');
 
 //Setup morgan
@@ -23,8 +27,18 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize()); //USE PASSPORT
+app.use(passport.session());
+
 require('./models/University');
 require('./models/Major');
+require('./models/User');
+require('./config/passport')(passport);
 
 let routes = require('./routes');
 app.use('/', routes);

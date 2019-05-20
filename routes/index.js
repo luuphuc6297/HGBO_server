@@ -3,6 +3,6 @@ const router = express.Router();
 
 router.use('/school', require('../routes/school'));
 router.use('/major',require('../routes/major'));
-// router.use('/user',require('../routes/user'));
+router.use('/user', require('../routes/user'));
 
 module.exports = router;
