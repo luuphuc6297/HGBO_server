@@ -8,9 +8,11 @@ router.use('/insert', require('./insert'));
 
 router.get('/', UniController.Uni_get_all);
 
-router.get('/search', UniController.Uni_get_name_uni_major);
+router.get('/search/', UniController.Uni_get_name_uni_major); //GET MAJOR FOLLOW UNI CODE AND YEAR
 
-router.get('/hotkey', UniController.Uni_hot_key);
+// router.get('/search', UniController.Uni_get_name_uni_majorUpdate);
+
+router.get('/hotkey/', UniController.Uni_hot_key);
 
 router.get('/:unicode',UniController.Uni_get_id);
 

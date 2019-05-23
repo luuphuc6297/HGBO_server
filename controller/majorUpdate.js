@@ -16,7 +16,6 @@ exports.MajorUpdate_get_all = function (req, res ,next) {
             return send.error(res, "SOME THING WRONG", err)
         });
 };
-
 exports.MajorUpdate_get_id= function (req, res, next) {
     const id = req.param('majorUpdateId');
     MajorUpdate.find({code: id})
@@ -27,6 +26,7 @@ exports.MajorUpdate_get_id= function (req, res, next) {
             return send.error(errors, "SOME THING WRONG", err);
         });
 };
+
 exports.MajorUpdate_post = (req, res, next) =>{
     const major = new MajorUpdate({
         uni: req.body.uni,

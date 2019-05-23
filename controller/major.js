@@ -21,7 +21,7 @@ exports.Major_get_id_and_year = (req, res, next) =>{
     const id = req.param('majorId');
     const idy = req.param('majorYear');
     if (idy){
-        Major.find({uni: id, year: idy})
+        Major.findOne({uni: id, year: idy})
             .then(response =>{
                 return send.success(res, "GET MAJOR AND YEAR SUCCESSFUL", response)
             })

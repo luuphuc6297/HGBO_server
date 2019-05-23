@@ -127,9 +127,12 @@ exports.Uni_delete = (req, res, next) =>{
         })
 };
 
+
+//Get uni Major follow Uni for web
 exports.Uni_get_name_uni_major = (req, res, next) =>{
     const code = req.param('universityId');
     const year = req.param('majorYear');
+    console.log(year);
     University.aggregate([
         {
             $match: {code: code}
@@ -138,8 +141,7 @@ exports.Uni_get_name_uni_major = (req, res, next) =>{
             $lookup:
             {
                 from: "majors",
-                // localField: "code",
-                // foreignField: "uni",
+
                 pipeline: [
                     { $match: {uni: code, year: year}},
                 ],
@@ -153,6 +155,30 @@ exports.Uni_get_name_uni_major = (req, res, next) =>{
         }else {
             console.log(result);
             return send.success(res, "SUCCESSFUL", result)
+        }
+    })
+};
+
+//Get uni Major follow Uni for app
+exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
+    const code = req.param('universityId');
+    University.aggregate(
+        {
+            $lookup:
+                {
+                    from: "majors",
+                    localField: "code",
+                    foreignField: "uni",
+                },
+            $match: {uni: code}
+        }
+    ).exec((err, result) =>{
+        if(err) {
+            console.log(err);
+            return send.fail(error,"FAIL SOME THING", err);
+        }else {
+         console.log(result);
+         return send.success(res, "SUCCESSFUL", result);
         }
     })
 };
