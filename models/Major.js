@@ -4,7 +4,6 @@ const mongoosePaginate = require('mongoose-paginate');
 let majorSchema = new mongoose.Schema({
    uni: {type: String, unique: true, index: true},
    year: String,
-   fee: String,
    mjs: []
 });
 majorSchema.method.JSONor = function () {

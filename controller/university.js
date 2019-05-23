@@ -3,6 +3,7 @@ const paginate = require('mongoose-paginate');
 const send = require('../routes/send');
 let University = mongoose.model('University');
 let Major = mongoose.model('Major');
+let Search = mongoose.model('Search');
 
 exports.Uni_get_all = (req, res, next) => {
     let page = parseInt (req.query.page);
@@ -17,7 +18,7 @@ exports.Uni_get_all = (req, res, next) => {
         });
 };
 exports.Uni_get_id =  (req, res, next)=>{
-    const id = req.param('universityId');
+    const id = req.param('unicode');
     University.find({code: id})
         .then(response => {
             return  send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
@@ -29,6 +30,21 @@ exports.Uni_get_id =  (req, res, next)=>{
 
 exports.Uni_get_name_uni = (req, res, next ) =>{
     let nameVN = req.params.name;
+
+    Search.findOne({key: nameVN})
+        .then(async (result) =>{
+        console.log(result);
+        if(result == null) {
+            const search = new Search ({
+                key: nameVN,
+                times: 1,
+                date: new Date()
+            });
+            search.save();
+        }else {
+            await Search.updateOne({key: nameVN}, {$set: {"times": result.times + 1}})
+        }
+    });
     // nameVN = nameVN.replace('-', ' ');
     University.find({$text:{$search: `\"${nameVN}\"`}})
         .then((result) =>{
@@ -39,6 +55,23 @@ exports.Uni_get_name_uni = (req, res, next ) =>{
     })
 };
 
+// exports.Uni_get_name_uni = (req, res, next) =>{
+//     let nameVN = req.params.name;
+//     University.find([
+//         {
+//             $text:{$search: `\"${nameVN}\"`}
+//         },
+//         {
+//             $count: [{$text:{$search: `\"${nameVN}\"`}}]
+//         },
+//         {
+//             $save: {key: `\"${nameVN}\"`}
+//         },
+//         {
+//             $insert:{key: $save, time: $count}
+//         }
+//     ])
+// };
 exports.Uni_post = (req, res,next)=>{
     const university =  new University({
         code: req.body.code,
@@ -68,6 +101,17 @@ exports.Uni_post = (req, res,next)=>{
         .catch(err =>{
             return send.success(res, "SOME THING WRONG", err)
         });
+};
+
+exports.Uni_hot_key = (req, res, next) =>{
+    Search.find().sort({times: -1}).limit(5)
+        .then(result =>{
+            console.log(result);
+            return res.status(201).json(result)
+        })
+        .catch( err =>{
+            res.status(500).json({errors: err})
+        })
 };
 
 exports.Uni_delete = (req, res, next) =>{

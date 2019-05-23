@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-// const paginate = require('mongoose-paginate');
+
 const MajController = require('../../controller/major');
-// let Major = mongoose.model('Major');
 
 router.use('/insert', require('./insert'));
 

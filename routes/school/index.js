@@ -8,11 +8,13 @@ router.use('/insert', require('./insert'));
 
 router.get('/', UniController.Uni_get_all);
 
-router.get('/searchId',UniController.Uni_get_id);
-
-router.get('/search/:name', UniController.Uni_get_name_uni );
-
 router.get('/search', UniController.Uni_get_name_uni_major);
+
+router.get('/hotkey', UniController.Uni_hot_key);
+
+router.get('/:unicode',UniController.Uni_get_id);
+
+router.get('/search/:name', UniController.Uni_get_name_uni);
 
 router.post('/',UniController.Uni_post);
 

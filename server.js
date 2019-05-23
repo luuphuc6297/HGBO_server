@@ -37,6 +37,8 @@ app.use(passport.session());
 
 require('./models/University');
 require('./models/Major');
+require('./models/MajorUpdate');
+require('./models/Search');
 require('./models/User');
 require('./config/passport')(passport);
 

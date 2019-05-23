@@ -1,7 +1,7 @@
 const  mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-let universitySchema =  mongoose.Schema({
+let universitySchema =  new mongoose.Schema({
     code: {type: String, trim: true, unique: true, index: true},
     nameVN: {type: String, index: true},
     nameEN: {type: String, index: true},
