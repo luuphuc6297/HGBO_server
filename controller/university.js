@@ -3,6 +3,7 @@ const paginate = require('mongoose-paginate');
 const send = require('../routes/send');
 let University = mongoose.model('University');
 let Major = mongoose.model('Major');
+let MajorUpdate = mongoose.model('MajorUpdate');
 let Search = mongoose.model('Search');
 
 exports.Uni_get_all = (req, res, next) => {
@@ -132,21 +133,21 @@ exports.Uni_delete = (req, res, next) =>{
 exports.Uni_get_name_uni_major = (req, res, next) =>{
     const code = req.param('universityId');
     const year = req.param('majorYear');
-    console.log(year);
+
     University.aggregate([
         {
             $match: {code: code}
         },
         {
             $lookup:
-            {
-                from: "majors",
+                {
+                    from: "majors",
 
-                pipeline: [
-                    { $match: {uni: code, year: year}},
-                ],
-                as: "Major_info"
-            }
+                    pipeline: [
+                        { $match: {uni: code, year: year}},
+                    ],
+                    as: "Major_info"
+                }
         },
     ]).exec((err, result) =>{
         if(err) {
@@ -159,20 +160,23 @@ exports.Uni_get_name_uni_major = (req, res, next) =>{
     })
 };
 
-//Get uni Major follow Uni for app
+// Get uni Major follow Uni for app
 exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
     const code = req.param('universityId');
-    University.aggregate(
+    University.aggregate([
         {
             $lookup:
                 {
-                    from: "majors",
-                    localField: "code",
-                    foreignField: "uni",
+                    from: "majorupdates", //Collection to join
+                    localField: "code", //Field from the input documents
+                    foreignField: "uni", //Field from the documents of the "from" collection
+                    as: "Maj_of_Uni"
                 },
-            $match: {uni: code}
+        },
+        {
+            $match: { code: code }
         }
-    ).exec((err, result) =>{
+    ]).exec((err, result) =>{
         if(err) {
             console.log(err);
             return send.fail(error,"FAIL SOME THING", err);
