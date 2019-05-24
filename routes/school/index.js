@@ -10,7 +10,7 @@ router.get('/', UniController.Uni_get_all); //GET ALL UNI (WEB, APP)
 
 router.get('/search/', UniController.Uni_get_name_uni_major); //GET MAJOR OF UNI FOLLOW UNI CODE AND YEAR(WEB)
 
-router.get('/search/', UniController.Uni_get_name_uni_majorUpdate); //GET UNI FOLLOW UNI CODE (APP)
+router.get('/major/search/', UniController.Uni_get_name_uni_majorUpdate); //GET UNI FOLLOW UNI CODE (APP)
 
 router.get('/hotkey/', UniController.Uni_hot_key); //GET HOT KEY
 

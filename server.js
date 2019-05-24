@@ -60,7 +60,13 @@ app.use((req, res, next)=> {
 //Catch 404 Errors and forward them to error
 app.use(function (req, res, next) {
         const err = new Error("Not Found");
-        err.status = 404;
+        res.status(err.status || 404);
+
+        res.json({
+            Ok: false,
+            message: err.message,
+            data: err
+        });
         next(err);
 });
 
