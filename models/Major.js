@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
 let majorSchema = new mongoose.Schema({
-   uni: {type: String, unique: true, index: true},
-   year: String,
-   mjs: []
+    uni: {type: String, unique: true, index: true},
+    year: String,
+    mjs: []
 });
 majorSchema.method.JSONor = function () {
-    return{
+    return {
         uni: this.uni,
         year: this.year,
         mjs: this.mjs

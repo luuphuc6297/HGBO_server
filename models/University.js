@@ -1,7 +1,7 @@
-const  mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-let universitySchema =  new mongoose.Schema({
+let universitySchema = new mongoose.Schema({
     code: {type: String, trim: true, unique: true, index: true},
     nameVN: {type: String, index: true},
     nameEN: {type: String, index: true},
@@ -11,10 +11,10 @@ let universitySchema =  new mongoose.Schema({
     year: String,
     address: String,
     weblink: String,
-    uni: {type: Boolean , index: true},
+    uni: {type: Boolean, index: true},
     description: [],
 });
-universitySchema.method.JSONor = function(){
+universitySchema.method.JSONor = function () {
     return {
         code: this.code,
         nameVN: this.nameVN,
@@ -28,4 +28,4 @@ universitySchema.method.JSONor = function(){
     }
 };
 universitySchema.plugin(mongoosePaginate);
-module.exports =  mongoose.model('University', universitySchema);
+module.exports = mongoose.model('University', universitySchema);

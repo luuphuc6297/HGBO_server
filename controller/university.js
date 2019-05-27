@@ -7,53 +7,53 @@ let MajorUpdate = mongoose.model('MajorUpdate');
 let Search = mongoose.model('Search');
 
 exports.Uni_get_all = (req, res, next) => {
-    let page = parseInt (req.query.page);
+    let page = parseInt(req.query.page);
     let limit = parseInt(req.query.limit);
 
     University.paginate({}, {page: page, limit: limit})
         .then(doc => {
-            return  send.success(res, 'HANDLING GET REQUEST TO /school', doc);
+            return send.success(res, 'HANDLING GET REQUEST TO /school', doc);
         })
-        .catch(err =>{
+        .catch(err => {
             return send.error(res, 'SOME THING WRONG', err)
         });
 };
-exports.Uni_get_id =  (req, res, next)=>{
+exports.Uni_get_id = (req, res, next) => {
     const id = req.param('unicode');
     University.find({code: id})
         .then(response => {
-            return  send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
+            return send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
         })
-        .catch(err =>{
+        .catch(err => {
             return send.error(errors, "SOME THING WRONG", err);
         });
 };
 
-exports.Uni_get_name_uni = (req, res, next ) =>{
+exports.Uni_get_name_uni = (req, res, next) => {
     let nameVN = req.params.name;
 
     Search.findOne({key: nameVN})
-        .then(async (result) =>{
-        console.log(result);
-        if(result == null) {
-            const search = new Search ({
-                key: nameVN,
-                times: 1,
-                date: new Date()
-            });
-            search.save();
-        }else {
-            await Search.updateOne({key: nameVN}, {$set: {"times": result.times + 1}})
-        }
-    });
+        .then(async (result) => {
+            console.log(result);
+            if (result == null) {
+                const search = new Search({
+                    key: nameVN,
+                    times: 1,
+                    date: new Date()
+                });
+                search.save();
+            } else {
+                await Search.updateOne({key: nameVN}, {$set: {"times": result.times + 1}})
+            }
+        });
     // nameVN = nameVN.replace('-', ' ');
-    University.find({$text:{$search: `\"${nameVN}\"`}})
-        .then((result) =>{
+    University.find({$text: {$search: `\"${nameVN}\"`}})
+        .then((result) => {
             res.status(201).json(result)
-        .catch(err =>{
-            res.status(500).json({error: err})
-            });
-    })
+                .catch(err => {
+                    res.status(500).json({error: err})
+                });
+        })
 };
 
 // exports.Uni_get_name_uni = (req, res, next) =>{
@@ -73,8 +73,8 @@ exports.Uni_get_name_uni = (req, res, next ) =>{
 //         }
 //     ])
 // };
-exports.Uni_post = (req, res,next)=>{
-    const university =  new University({
+exports.Uni_post = (req, res, next) => {
+    const university = new University({
         code: req.body.code,
         nameVN: req.body.nameVN,
         nameEN: req.body.nameEN,
@@ -86,10 +86,9 @@ exports.Uni_post = (req, res,next)=>{
     });
     University.findOne({code: university.code})
         .then(response => {
-            if (response){
+            if (response) {
                 return send.fail(res, 'EXIST CODE')
-            }
-            else {
+            } else {
                 university.save()
                     .then(result => {
                         return send.success(res, 'CREATE SUCCESSFUL', result)
@@ -99,38 +98,38 @@ exports.Uni_post = (req, res,next)=>{
                     })
             }
         })
-        .catch(err =>{
+        .catch(err => {
             return send.success(res, "SOME THING WRONG", err)
         });
 };
 
-exports.Uni_hot_key = (req, res, next) =>{
+exports.Uni_hot_key = (req, res, next) => {
     Search.find().sort({times: -1}).limit(5)
-        .then(result =>{
+        .then(result => {
             console.log(result);
             return res.status(201).json(result)
         })
-        .catch( err =>{
+        .catch(err => {
             res.status(500).json({errors: err})
         })
 };
 
-exports.Uni_delete = (req, res, next) =>{
+exports.Uni_delete = (req, res, next) => {
     const id = req.param('universityId');
     University.remove({_id: id})
-        .then(() =>{
+        .then(() => {
             res.status(201).json({
-                message:"DELETE SUCCESSFUL",
+                message: "DELETE SUCCESSFUL",
             })
-        .catch(err =>{
-        res.status(500).json({error: err})
-             });
+                .catch(err => {
+                    res.status(500).json({error: err})
+                });
         })
 };
 
 
 //Get uni Major follow Uni for web
-exports.Uni_get_name_uni_major = (req, res, next) =>{
+exports.Uni_get_name_uni_major = (req, res, next) => {
     const code = req.param('universityId');
     const year = req.param('majorYear');
 
@@ -144,16 +143,16 @@ exports.Uni_get_name_uni_major = (req, res, next) =>{
                     from: "majors",
 
                     pipeline: [
-                        { $match: {uni: code, year: year}},
+                        {$match: {uni: code, year: year}},
                     ],
                     as: "Major_info"
                 }
         },
-    ]).exec((err, result) =>{
-        if(err) {
+    ]).exec((err, result) => {
+        if (err) {
             console.log(err);
             return send.fail(res, "FAIL SOME THING", err)
-        }else {
+        } else {
             console.log(result);
             return send.success(res, "SUCCESSFUL", result)
         }
@@ -174,15 +173,15 @@ exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
                 },
         },
         {
-            $match: { code: code }
+            $match: {code: code}
         }
-    ]).exec((err, result) =>{
-        if(err) {
+    ]).exec((err, result) => {
+        if (err) {
             console.log(err);
-            return send.fail(error,"FAIL SOME THING", err);
-        }else {
-         console.log(result);
-         return send.success(res, "SUCCESSFUL", result);
+            return send.fail(error, "FAIL SOME THING", err);
+        } else {
+            console.log(result);
+            return send.success(res, "SUCCESSFUL", result);
         }
     })
 };

@@ -1,11 +1,11 @@
-const   http = require('http');
-        express = require('express');
-        path = require('path');
-        mongoose = require('mongoose');
-        bodyParser = require('body-parser');
-        cookieParser = require('cookie-parser');
-        passport = require('passport');
-        session = require('express-session');
+const http = require('http');
+express = require('express');
+path = require('path');
+mongoose = require('mongoose');
+bodyParser = require('body-parser');
+cookieParser = require('cookie-parser');
+passport = require('passport');
+session = require('express-session');
 
 // Create global app object
 const app = express();
@@ -22,7 +22,7 @@ app.set('view engine', 'ejs');
 app.use(require('morgan')('dev'));
 
 //Setup bodyParser
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -44,39 +44,39 @@ require('./config/passport')(passport);
 
 let routes = require('./routes');
 app.use('/', routes);
-app.use((req, res, next)=> {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header(
-            "Access-Control-Allow-Headers",
-            "Origin, X-requested-With, Content-Type, Accept, Authorization",
-        );
-        if (req.method === 'OPTION'){
-                res.header("Access-Control-Allow-Methods","PUT,POST,PATCH,DELETE,GET")
-                return res.status(200).json({});
-        }
-        next();
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-requested-With, Content-Type, Accept, Authorization",
+    );
+    if (req.method === 'OPTION') {
+        res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,DELETE,GET")
+        return res.status(200).json({});
+    }
+    next();
 });
 
 //Catch 404 Errors and forward them to error
 app.use(function (req, res, next) {
-        const err = new Error("Not Found");
-        res.status(err.status || 404);
+    const err = new Error("Not Found");
+    res.status(err.status || 404);
 
-        res.json({
-            Ok: false,
-            message: err.message,
-            data: err
-        });
-        next(err);
+    res.json({
+        Ok: false,
+        message: err.message,
+        data: err
+    });
+    next(err);
 });
 
-app.use (function (req, res, next) {
-        res.status(error.status || 500);
-        res.json({
-                error: {
-                        message: error.message
-                }
-        });
+app.use(function (req, res, next) {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
 });
 
 const server = http.Server(app);

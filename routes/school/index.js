@@ -14,11 +14,11 @@ router.get('/major/search/', UniController.Uni_get_name_uni_majorUpdate); //GET 
 
 router.get('/hotkey/', UniController.Uni_hot_key); //GET HOT KEY
 
-router.get('/:unicode',UniController.Uni_get_id); //GET UNIVERSITY FOLLOW ID
+router.get('/:unicode', UniController.Uni_get_id); //GET UNIVERSITY FOLLOW ID
 
 router.get('/search/:name', UniController.Uni_get_name_uni);
 
-router.post('/',UniController.Uni_post);
+router.post('/', UniController.Uni_post);
 
 router.delete('/delete', UniController.Uni_delete);
 
