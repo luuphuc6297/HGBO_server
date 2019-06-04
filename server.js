@@ -40,6 +40,7 @@ require('./models/Major');
 require('./models/MajorUpdate');
 require('./models/Search');
 require('./models/User');
+require('./models/GroupMajor');
 require('./config/passport')(passport);
 
 let routes = require('./routes');

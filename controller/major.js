@@ -13,7 +13,7 @@ exports.Maj_get_all = async (req, res, next) => {
             return send.success(res, 'HANDLING GET REQUEST TO /major', doc);
         })
         .catch(err => {
-            return send.error(res, "SOME THING WRONG", err)
+            return send.fail(res, "SOME THING WRONG", err)
         });
 };
 
@@ -38,6 +38,17 @@ exports.Major_get_id_and_year = (req, res, next) => {
             })
     }
 };
+exports.Major_get_majorCode = (req, res, next) =>{
+    const code = req.param('majorCode');
+    console.log('majorCode');
+    Major.find({mjs: {$elemMatch: {code: code}}})
+        .then(response => {
+            return send.success(res, 'HANDLING GET REQUEST TO /major/majorCode', response);
+        })
+        .catch(err => {
+            return send.error(errors, "SOME THING WRONG", err);
+        });
+};
 exports.Maj_post = (req, res, next) => {
     const major = new Major({
         uni: req.body.uni,
@@ -47,18 +58,18 @@ exports.Maj_post = (req, res, next) => {
     });
     Major.findOne({year: major.year})
         .then(response => {
-            if (response) {
-                return send.fail(res, "EXIST YEAR UPDATE", response);
-            } else {
-                major.save()
-                    .then(result => {
-                        return send.success(res, "CREATE MAJOR SUCCESSFUL", result)
-                    })
-                    .catch(err => {
-                        return send.error(res, "SOME THING WRONG", err)
-                    })
-            }
-        })
+        if (response) {
+            return send.fail(res, "EXIST YEAR UPDATE", response);
+        } else {
+            major.save()
+                .then(result => {
+                    return send.success(res, "CREATE MAJOR SUCCESSFUL", result)
+                })
+                .catch(err => {
+                    return send.error(res, "SOME THING WRONG", err)
+                })
+        }
+    })
         .catch(err => {
             return send.error(res, "FAIL SOME THING", err)
         });

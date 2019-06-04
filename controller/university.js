@@ -28,7 +28,6 @@ exports.Uni_get_id = (req, res, next) => {
             return send.error(errors, "SOME THING WRONG", err);
         });
 };
-
 exports.Uni_get_name_uni = (req, res, next) => {
     let nameVN = req.params.name;
 
