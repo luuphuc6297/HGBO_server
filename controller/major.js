@@ -39,7 +39,7 @@ exports.Major_get_id_and_year = (req, res, next) => {
     }
 };
 exports.Major_get_majorCode = (req, res, next) =>{
-    const code = req.param('majorCode');
+    const code = req.query.majorCode;
     console.log('majorCode');
     Major.find({mjs: {$elemMatch: {code: code}}})
         .then(response => {

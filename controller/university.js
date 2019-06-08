@@ -19,7 +19,7 @@ exports.Uni_get_all = (req, res, next) => {
         });
 };
 exports.Uni_get_id = (req, res, next) => {
-    const id = req.param('unicode');
+    const id = req.query.unicode;
     University.find({code: id})
         .then(response => {
             return send.success(res, 'HANDLING GET REQUEST TO /school/code', response);
@@ -29,8 +29,7 @@ exports.Uni_get_id = (req, res, next) => {
         });
 };
 exports.Uni_get_name_uni = (req, res, next) => {
-    let nameVN = req.params.name;
-
+    let nameVN = req.query.name;
     Search.findOne({key: nameVN})
         .then(async (result) => {
             console.log(result);
@@ -160,7 +159,7 @@ exports.Uni_get_name_uni_major = (req, res, next) => {
 
 // Get uni Major follow Uni for app
 exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
-    const code = req.param('universityId');
+    const code = req.query.universityId;
     University.aggregate([
         {
             $lookup:

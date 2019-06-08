@@ -9,7 +9,7 @@ router.get('/', MajController.Maj_get_all);
 
 router.get('/search', MajController.Major_get_id_and_year);
 
-router.get('/majorCode/', MajController.Major_get_majorCode);
+router.get('/majorCode/', MajController.Major_get_majorCode); //6
 
 router.post('/', MajController.Maj_post);
 

@@ -17,8 +17,7 @@ exports.GroupMajor_get_all = async (req, res, next) => {
         })
 };
 exports.GroupMajor_get_code_major = (req, res, next) => {
-    const code = req.param('majorCode');
-    console.log('majorCode');
+    const code = req.query.majorCode;
     GroupMajor.aggregate([
         {
             $lookup:
