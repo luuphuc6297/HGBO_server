@@ -30,6 +30,9 @@ exports.Uni_get_id = (req, res, next) => {
 };
 exports.Uni_get_name_uni = (req, res, next) => {
     let nameVN = req.query.name;
+    let page = parseInt(req.query.page)
+    let limit = parseInt(req.query.limit)
+
     Search.findOne({key: nameVN})
         .then(async (result) => {
             console.log(result);
@@ -45,13 +48,14 @@ exports.Uni_get_name_uni = (req, res, next) => {
             }
         });
     // nameVN = nameVN.replace('-', ' ');
-    University.find({$text: {$search: `\"${nameVN}\"`}})
+    
+    University.paginate({$text: {$search: `\"${nameVN}\"`}}, {page: page, limit: limit})
         .then((result) => {
             res.status(201).json(result)
-                .catch(err => {
-                    res.status(500).json({error: err})
-                });
-        })
+        .catch(err => {
+            res.status(500).json({error: err})
+        });
+    })
 };
 
 // exports.Uni_get_name_uni = (req, res, next) =>{
@@ -172,6 +176,7 @@ exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
         },
         {
             $match: {code: code}
+            
         }
     ]).exec((err, result) => {
         if (err) {

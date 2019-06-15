@@ -6,7 +6,9 @@ const MajorUpdateController = require('../../controller/majorUpdate');
 
 router.get('/', MajorUpdateController.MajorUpdate_get_all);
 
-router.get('/searchId', MajorUpdateController.MajorUpdate_get_id);
+router.get('/majorCode/', MajorUpdateController.MajorUpdate_get_id); // Replace 6
+
+router.get('/majorAvg/', MajorUpdateController.MajorUpdate_get_avg_major);
 
 router.post('/', MajorUpdateController.MajorUpdate_post);
 

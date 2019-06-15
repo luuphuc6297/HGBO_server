@@ -3,6 +3,15 @@ const mongoosePaginate = require('mongoose-paginate');
 
 let majorUpdateSchema = new mongoose.Schema({
     uni: {type: String, unique: true, index: true},
+    // mjs: [{
+    //     code: {type: String, unique: true},
+    //     name: {type: String},
+    //     group: {type: String},
+    //     point: [{
+    //         year: {type: Number}
+    //     }],
+    //     note: {type: String}
+    // }]
     mjs: []
 });
 
