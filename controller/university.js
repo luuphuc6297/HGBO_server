@@ -148,6 +148,7 @@ exports.Uni_get_name_uni_major = (req, res, next) => {
                         {$match: {uni: code, year: year}},
                     ],
                     as: "Major_info"
+
                 }
         },
     ]).exec((err, result) => {
