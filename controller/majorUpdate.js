@@ -81,6 +81,30 @@ exports.MajorUpdate_get_avg_major = (req, res, next) => {
     )
 };
 
+exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
+    const code = req.query.code;
+
+    University.findOne({"code": code}, (err, data) => {
+        const update = {
+            name: data.nameVN,
+            logo: data.logo,
+            address: data.address,
+            thumbnail: data.thumnaildefault,
+            description: data.description
+        }
+    MajorUpdate.findOneAndUpdate(
+        {"uni": data.code}, 
+        {$set: update}, 
+        {new: true}, 
+        (err, dataNew) => {
+            for (i = 0; i < dataNew.length; i ++) {
+                delete dataNew["mjs"];
+            }
+            return send.success(res, "Update successful", dataNew);
+        })
+    })
+}
+
 exports.MajorUpdate_post = (req, res, next) => {
     const major = new MajorUpdate({
         uni: req.body.uni,
@@ -115,19 +139,3 @@ exports.MajorUpdate_delete = (req, res, next) => {
         })
 };
 
-exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
-    const code = req.query.code;
-
-    University.findOne({"code": code}, (err, data) => {
-        const update = {
-            name: data.name,
-            logo: data.logo,
-            address: data.address,
-            thumbnail: data.thumbnail,
-            description: data.description
-        }
-    MajorUpdate.findOneAndUpdate({"uni": data.code}, {$set: update}, {new: true}, (err, dataNew) =>{
-            return send.success(res, "Update successful", dataNew)
-        })
-    })
-}

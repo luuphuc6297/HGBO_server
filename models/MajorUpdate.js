@@ -12,17 +12,22 @@ let majorUpdateSchema = new mongoose.Schema({
     //     }],
     //     note: {type: String}
     // }]
-    // nameVN: {type: String, index: true},
-    // logo: String,
-    // description: [],
+    name: {type: String, index: true},
+    logo: String,
+    address: String,
+    thumbnail: String,
+    description: [],
     mjs: []
 });
 
 majorUpdateSchema.method.JSONor = function () {
     return {
         uni: this.uni,
-        // nameVN: this.nameVN,
-        // logo: this.logo,
+        name: this.nameVN,
+        logo: this.logo,
+        address: this.address,
+        thumbnail: this.thumbnail,
+        description: this.description,
         mjs: this.mjs
     }
 };

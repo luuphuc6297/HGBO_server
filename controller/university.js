@@ -177,7 +177,6 @@ exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
         },
         {
             $match: {code: code}
-            
         }
     ]).exec((err, result) => {
         if (err) {
