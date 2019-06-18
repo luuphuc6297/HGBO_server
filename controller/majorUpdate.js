@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const panginate = require('mongoose-paginate');
 
 const send = require('../routes/send');
-let MajorUpdate = mongoose.model('MajorUpdate');
+const MajorUpdate = mongoose.model('MajorUpdate');
+const University = mongoose.model('University')
 
 exports.MajorUpdate_get_all = function (req, res, next) {
     let page = parseInt(req.query.page);
@@ -113,3 +114,20 @@ exports.MajorUpdate_delete = (req, res, next) => {
             return send.error(res, "SOME THING WRONG", err)
         })
 };
+
+exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
+    const code = req.query.code;
+
+    University.findOne({"code": code}, (err, data) => {
+        const update = {
+            name: data.name,
+            logo: data.logo,
+            address: data.address,
+            thumbnail: data.thumbnail,
+            description: data.description
+        }
+    MajorUpdate.findOneAndUpdate({"uni": data.code}, {$set: update}, {new: true}, (err, dataNew) =>{
+            return send.success(res, "Update successful", dataNew)
+        })
+    })
+}

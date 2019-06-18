@@ -172,7 +172,7 @@ exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
                     from: "majorupdates", //Collection to join
                     localField: "code", //Field from the input documents
                     foreignField: "uni", //Field from the documents of the "from" collection
-                    as: "Maj_of_Uni"
+                    as: "Maj_of_Uni",
                 },
         },
         {
@@ -189,3 +189,5 @@ exports.Uni_get_name_uni_majorUpdate = (req, res, next) => {
         }
     })
 };
+
+

@@ -6,5 +6,6 @@ router.use('/major', require('../routes/major'));
 router.use('/majorUpdate', require('../routes/majorUpdate'));
 router.use('/user', require('../routes/user'));
 router.use('/groupMajor', require('../routes/GroupMajor'));
+router.use('/recommender', require('../routes/Recommender'))
 
 module.exports = router;
