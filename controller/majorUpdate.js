@@ -43,31 +43,15 @@ exports.MajorUpdate_get_University_follow_majorCode = function(req, res, next) {
     MajorUpdate.paginate({ mjs: { $elemMatch: { code: codeM }}},{page:page, limit: limit}).then(
         majors => {
             promises = []
-            for (var i = 0; i < majors.length; i++){
-                delete majors[i].mjs;               
-                unicode= majors[i].uni;
+            for (var i = 0; i < majors.docs.length; i++){
+                delete majors.docs[i].mjs;                
+                unicode= majors.docs[i].uni;
                 promises.push(University.find({code: unicode}))
             }
             Promise.all(promises)
             .then(results => send.success(res, "Get uni of major successful", results));
         } 
     )
-    // University.find({"code": code}, (err, data) => {
-    //     const update = {
-    //         name: data.nameVN,
-    //         logo: data.logo,
-    //         address: data.address,
-    //         thumbnail: data.thumnaildefault,
-    //         description: data.description
-    //     }
-    // MajorUpdate.findOneAndUpdate(
-    //     {"uni": data.code}, 
-    //     {$set: update}, 
-    //     {new: true}, 
-    //     (err, dataNew) => {
-    //         return send.success(res, "Update successful", dataNew);
-    //     })
-    // })
 }
 
 exports.MajorUpdate_get_avg_major = (req, res, next) => {
@@ -147,3 +131,19 @@ exports.MajorUpdate_delete = (req, res, next) => {
         })
 };
 
+// University.find({"code": code}, (err, data) => {
+    //     const update = {
+    //         name: data.nameVN,
+    //         logo: data.logo,
+    //         address: data.address,
+    //         thumbnail: data.thumnaildefault,
+    //         description: data.description
+    //     }
+    // MajorUpdate.findOneAndUpdate(
+    //     {"uni": data.code}, 
+    //     {$set: update}, 
+    //     {new: true}, 
+    //     (err, dataNew) => {
+    //         return send.success(res, "Update successful", dataNew);
+    //     })
+    // })
