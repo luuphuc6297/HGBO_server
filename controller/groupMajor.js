@@ -6,12 +6,10 @@ let GroupMajor = mongoose.model('GroupMajor');
 
 exports.GroupMajor_get_all = async (req, res, next) => {
 
-    // let id = req.query.id
     let page = parseInt(req.query.page);
     let limit = parseInt(req.query.limit);
 
     GroupMajor.paginate({},{page: 1, limit: 28})
-    // GroupMajor.findOne({},{_id: id})
         .then(doc => {
             return send.success(res, 'GET GROUP MAJOR ALL SUCCESS', doc)
         })

@@ -23,7 +23,7 @@ let majorUpdateSchema = new mongoose.Schema({
 majorUpdateSchema.method.JSONor = function () {
     return {
         uni: this.uni,
-        name: this.nameVN,
+        name: this.name,
         logo: this.logo,
         address: this.address,
         thumbnail: this.thumbnail,

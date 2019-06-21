@@ -17,28 +17,80 @@ exports.MajorUpdate_get_all = function (req, res, next) {
             return send.error(res, "SOME THING WRONG", err)
         });
 };
-exports.MajorUpdate_get_id = function (req, res, next) {
-    const code = req.query.majorUpdateId;
-    MajorUpdate.find({ mjs: { $elemMatch: { code: code } } })
-        .then(response => {
-            return send.success(res, 'HANDLING GET REQUEST TO /majorUpdateId/', response);
+// exports.MajorUpdate_get_id = function (req, res, next) {
+//     const code = req.query.majorUpdateId;
+//     MajorUpdate.find({ mjs: { $elemMatch: { code: code } } })
+//         .then(response => {
+//             for(i = 0; i < mjs.length; i++) {
+//                 var mj = majors[i];
+//                 delete mj.point;
+//                 delete mj.group;
+//                 delete mj.note;
+//             }
+//             return send.success(res, 'HANDLING GET REQUEST TO /majorUpdateId/', response);
+//         })
+//         .catch(err => {
+//             return send.error(errors, "SOME THING WRONG", err);
+//         });
+// };
+
+exports.MajorUpdate_get_University_follow_majorCode = function(req, res, next) {
+
+    const codeM = req.query.majorUpdateId;
+    const code = req.query.code;
+
+    MajorUpdate.find({ mjs: { $elemMatch: { code: codeM }}}).then(
+        result => {
+            for (var i = 0; i < result.length; i++){
+                var majors = result[i].mjs;
+                for (var j = 0; j < majors.length; j++){
+                    var mj = majors[j];
+                    delete mj.point;
+                    delete mj.group;
+                    delete mj.note;
+                }
+            }
+            return send.success(res, "Remove field successful", result);
+        } 
+    )
+    University.find({},{"code": code}, (err, data) => {
+        const update = {
+            name: data.nameVN,
+            logo: data.logo,
+            address: data.address,
+            thumbnail: data.thumnaildefault,
+            description: data.description
+        }
+    MajorUpdate.findOneAndUpdate(
+        {"uni": data.code}, 
+        {$set: update}, 
+        {new: true}, 
+        (err, dataNew) => {
+            return send.success(res, "Update successful", dataNew);
         })
-        .catch(err => {
-            return send.error(errors, "SOME THING WRONG", err);
-        });
-    // MajorUpdate.aggregate([
-    //     {
-    //         $unwind: "$mjs"
-    //     },
-    //     {
-    //         $sort: { "mjs.point": 1 }
-    //     }
-    // ]).then(response => {
-    //         return send.success(res, 'HANDLING GET REQUEST TO /majorUpdateId/', response);
-    // }).catch(err => {
-    //         return send.error(errors, "SOME THING WRONG", err);
-    //     });
-};
+    })
+}
+
+exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
+    const code = req.query.code;
+
+    University.findOne({"code": code}, (err, data) => {
+        const update = {
+            name: data.nameVN,
+            logo: data.logo,
+            address: data.address,
+            thumbnail: data.thumnaildefault,
+            description: data.description
+        }
+    MajorUpdate.findOneAndUpdate(
+        {"uni": data.code}, 
+        {$set: update}, 
+        {new: true}, 
+        (err, dataNew) => {
+            return send.success(res, "Update successful", dataNew);
+        })
+    })
+}
 
 exports.MajorUpdate_get_avg_major = (req, res, next) => {
     const code = req.query.code;
@@ -46,6 +98,7 @@ exports.MajorUpdate_get_avg_major = (req, res, next) => {
     MajorUpdate.findOne({uni: code}).then(
         result => {
             var majors = result.mjs
+            console.log(result.mjs)
             var response = [];
             for (var i = 0; i < majors.length; i++){
                 var mj = majors[i];
@@ -76,34 +129,12 @@ exports.MajorUpdate_get_avg_major = (req, res, next) => {
                     return -1;
                 }
             })
-            return send.success(res, "SUCCESSFUL", response);
+            return send.success(res, "Get AVG SUCCESSFUL", response);
         }
     )
 };
 
-exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
-    const code = req.query.code;
 
-    University.findOne({"code": code}, (err, data) => {
-        const update = {
-            name: data.nameVN,
-            logo: data.logo,
-            address: data.address,
-            thumbnail: data.thumnaildefault,
-            description: data.description
-        }
-    MajorUpdate.findOneAndUpdate(
-        {"uni": data.code}, 
-        {$set: update}, 
-        {new: true}, 
-        (err, dataNew) => {
-            for (i = 0; i < dataNew.length; i ++) {
-                delete dataNew["mjs"];
-            }
-            return send.success(res, "Update successful", dataNew);
-        })
-    })
-}
 
 exports.MajorUpdate_post = (req, res, next) => {
     const major = new MajorUpdate({
@@ -128,6 +159,7 @@ exports.MajorUpdate_post = (req, res, next) => {
             return send.error(res, "FAIL SOME THING", err)
         });
 };
+
 exports.MajorUpdate_delete = (req, res, next) => {
     const id = req.param('majorUpdateId');
     MajorUpdate.remove({ _id: id })

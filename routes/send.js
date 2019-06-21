@@ -6,13 +6,6 @@ const send = {
             data
         });
     },
-    notSuccess: (res, message, data) => {
-        res.status(500).json({
-            status: false,
-            message,
-            data
-        })
-    },
     fail: (res, message) => {
         res.status(422).json({
             status: false,

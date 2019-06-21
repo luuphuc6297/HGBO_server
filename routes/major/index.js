@@ -3,13 +3,11 @@ const mongoose = require('mongoose');
 
 const MajController = require('../../controller/major');
 
-router.use('/insert', require('./insert'));
-
 router.get('/', MajController.Maj_get_all);
 
 router.get('/search', MajController.Major_get_id_and_year);
 
-router.get('/majorCode/', MajController.Major_get_majorCode); //6
+router.get('/majorCode/', MajController.Major_get_majorCode); 
 
 router.post('/', MajController.Maj_post);
 
