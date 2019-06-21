@@ -18,8 +18,8 @@ exports.Maj_get_all = async (req, res, next) => {
 };
 
 exports.Major_get_id_and_year = (req, res, next) => {
-    const id = req.param('majorId');
-    const idy = req.param('majorYear');
+    const id = req.query.majorId;
+    const idy = req.query.majorYear;
     if (idy) {
         Major.findOne({uni: id, year: idy})
             .then(response => {

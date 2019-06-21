@@ -9,7 +9,7 @@ router.get('/majorCode/', MajorUpdateController.MajorUpdate_get_University_follo
 
 router.get('/majorAvg/', MajorUpdateController.MajorUpdate_get_avg_major); // 7
 
-router.get('/update/', MajorUpdateController.MajorUpdate_Update_logo_fromUni);
+// router.get('/update/', MajorUpdateController.MajorUpdate_Update_logo_fromUni);
 
 router.post('/', MajorUpdateController.MajorUpdate_post);
 

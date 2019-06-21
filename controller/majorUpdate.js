@@ -37,59 +37,37 @@ exports.MajorUpdate_get_all = function (req, res, next) {
 exports.MajorUpdate_get_University_follow_majorCode = function(req, res, next) {
 
     const codeM = req.query.majorUpdateId;
-    const code = req.query.code;
+    let page = parseInt(req.query.page);
+    let limit = parseInt(req.query.limit);
 
-    MajorUpdate.find({ mjs: { $elemMatch: { code: codeM }}}).then(
-        result => {
-            for (var i = 0; i < result.length; i++){
-                var majors = result[i].mjs;
-                for (var j = 0; j < majors.length; j++){
-                    var mj = majors[j];
-                    delete mj.point;
-                    delete mj.group;
-                    delete mj.note;
-                }
+    MajorUpdate.paginate({ mjs: { $elemMatch: { code: codeM }}},{page:page, limit: limit}).then(
+        majors => {
+            promises = []
+            for (var i = 0; i < majors.length; i++){
+                delete majors[i].mjs;               
+                unicode= majors[i].uni;
+                promises.push(University.find({code: unicode}))
             }
-            return send.success(res, "Remove field successful", result);
+            Promise.all(promises)
+            .then(results => send.success(res, "Get uni of major successful", results));
         } 
     )
-    University.find({},{"code": code}, (err, data) => {
-        const update = {
-            name: data.nameVN,
-            logo: data.logo,
-            address: data.address,
-            thumbnail: data.thumnaildefault,
-            description: data.description
-        }
-    MajorUpdate.findOneAndUpdate(
-        {"uni": data.code}, 
-        {$set: update}, 
-        {new: true}, 
-        (err, dataNew) => {
-            return send.success(res, "Update successful", dataNew);
-        })
-    })
-}
-
-exports.MajorUpdate_Update_logo_fromUni = (req, res, next) =>{
-    const code = req.query.code;
-
-    University.findOne({"code": code}, (err, data) => {
-        const update = {
-            name: data.nameVN,
-            logo: data.logo,
-            address: data.address,
-            thumbnail: data.thumnaildefault,
-            description: data.description
-        }
-    MajorUpdate.findOneAndUpdate(
-        {"uni": data.code}, 
-        {$set: update}, 
-        {new: true}, 
-        (err, dataNew) => {
-            return send.success(res, "Update successful", dataNew);
-        })
-    })
+    // University.find({"code": code}, (err, data) => {
+    //     const update = {
+    //         name: data.nameVN,
+    //         logo: data.logo,
+    //         address: data.address,
+    //         thumbnail: data.thumnaildefault,
+    //         description: data.description
+    //     }
+    // MajorUpdate.findOneAndUpdate(
+    //     {"uni": data.code}, 
+    //     {$set: update}, 
+    //     {new: true}, 
+    //     (err, dataNew) => {
+    //         return send.success(res, "Update successful", dataNew);
+    //     })
+    // })
 }
 
 exports.MajorUpdate_get_avg_major = (req, res, next) => {
@@ -133,8 +111,6 @@ exports.MajorUpdate_get_avg_major = (req, res, next) => {
         }
     )
 };
-
-
 
 exports.MajorUpdate_post = (req, res, next) => {
     const major = new MajorUpdate({
