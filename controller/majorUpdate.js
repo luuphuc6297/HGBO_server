@@ -17,74 +17,68 @@ exports.MajorUpdate_get_all = function (req, res, next) {
             return send.error(res, "SOME THING WRONG", err)
         });
 };
-// exports.MajorUpdate_get_id = function (req, res, next) {
-//     const code = req.query.majorUpdateId;
-//     MajorUpdate.find({ mjs: { $elemMatch: { code: code } } })
-//         .then(response => {
-//             for(i = 0; i < mjs.length; i++) {
-//                 var mj = majors[i];
-//                 delete mj.point;
-//                 delete mj.group;
-//                 delete mj.note;
-//             }
-//             return send.success(res, 'HANDLING GET REQUEST TO /majorUpdateId/', response);
-//         })
-//         .catch(err => {
-//             return send.error(errors, "SOME THING WRONG", err);
-//         });
-// };
 
-exports.MajorUpdate_get_University_follow_majorCode = function(req, res, next) {
+exports.MajorUpdate_get_University_follow_majorCode = function (req, res, next) {
 
     const codeM = req.query.majorUpdateId;
     let page = parseInt(req.query.page);
     let limit = parseInt(req.query.limit);
 
-    MajorUpdate.paginate({ mjs: { $elemMatch: { code: codeM }}},{page:page, limit: limit}).then(
+    MajorUpdate.paginate({ mjs: { $elemMatch: { code: codeM } } }, { page: page, limit: limit }).then(
         majors => {
-            promises = []
-            for (var i = 0; i < majors.docs.length; i++){
-                delete majors.docs[i].mjs;                
-                unicode= majors.docs[i].uni;
-                promises.push(University.find({code: unicode}))
+            promises = [];
+            total = majors.total;
+            pages = majors.pages;
+            for (var i = 0; i < majors.docs.length; i++) {
+                delete majors.docs[i].mjs;
+                unicode = majors.docs[i].uni;
+                promises.push(University.findOne({ code: unicode }))
             }
-            Promise.all(promises)
-            .then(results => send.success(res, "Get uni of major successful", results));
-        } 
+        Promise.all(promises)
+            .then(results => {
+                    return res.status(200).json({
+                        status: true,
+                        data: results,
+                        total: total,
+                        pages: pages
+                    })
+                }
+            );
+        }
     )
 }
 
 exports.MajorUpdate_get_avg_major = (req, res, next) => {
     const code = req.query.code;
 
-    MajorUpdate.findOne({uni: code}).then(
+    MajorUpdate.findOne({ uni: code }).then(
         result => {
             var majors = result.mjs
             console.log(result.mjs)
             var response = [];
-            for (var i = 0; i < majors.length; i++){
+            for (var i = 0; i < majors.length; i++) {
                 var mj = majors[i];
                 var sum = 0;
                 var count = 0;
                 var avg = 0;
-                for (var j = 0; j < mj.point.length; j++){
-                    for (var key in mj.point[j]){
+                for (var j = 0; j < mj.point.length; j++) {
+                    for (var key in mj.point[j]) {
                         var p = parseFloat(mj.point[j][key])
-                        if (!isNaN(p)){
+                        if (!isNaN(p)) {
                             sum += p;
                             count++;
                         }
                     }
                 }
-                avg = count == 0 ? 0 : sum/count;
+                avg = count == 0 ? 0 : sum / count;
                 mj["avg"] = avg;
                 delete mj.point;
                 delete mj.group;
                 delete mj.note;
                 response.push(mj);
             }
-            response.sort(function (a, b){
-                if (a.avg < b.avg){
+            response.sort(function (a, b) {
+                if (a.avg < b.avg) {
                     return 1;
                 }
                 else {
@@ -132,18 +126,34 @@ exports.MajorUpdate_delete = (req, res, next) => {
 };
 
 // University.find({"code": code}, (err, data) => {
-    //     const update = {
-    //         name: data.nameVN,
-    //         logo: data.logo,
-    //         address: data.address,
-    //         thumbnail: data.thumnaildefault,
-    //         description: data.description
-    //     }
-    // MajorUpdate.findOneAndUpdate(
-    //     {"uni": data.code}, 
-    //     {$set: update}, 
-    //     {new: true}, 
-    //     (err, dataNew) => {
-    //         return send.success(res, "Update successful", dataNew);
-    //     })
-    // })
+//         const update = {
+//             name: data.nameVN,
+//             logo: data.logo,
+//             address: data.address,
+//             thumbnail: data.thumnaildefault,
+//             description: data.description
+//         }
+//     MajorUpdate.findOneAndUpdate(
+//         {"uni": data.code}, 
+//         {$set: update}, 
+//         {new: true}, 
+//         (err, dataNew) => {
+//             return send.success(res, "Update successful", dataNew);
+//         })
+//     })
+// exports.MajorUpdate_get_id = function (req, res, next) {
+//     const code = req.query.majorUpdateId;
+//     MajorUpdate.find({ mjs: { $elemMatch: { code: code } } })
+//         .then(response => {
+//             for(i = 0; i < mjs.length; i++) {
+//                 var mj = majors[i];
+//                 delete mj.point;
+//                 delete mj.group;
+//                 delete mj.note;
+//             }
+//             return send.success(res, 'HANDLING GET REQUEST TO /majorUpdateId/', response);
+//         })
+//         .catch(err => {
+//             return send.error(errors, "SOME THING WRONG", err);
+//         });
+// };
