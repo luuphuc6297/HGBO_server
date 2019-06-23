@@ -36,12 +36,24 @@ exports.MajorUpdate_get_University_follow_majorCode = function (req, res, next) 
             }
         Promise.all(promises)
             .then(results => {
-                    return res.status(200).json({
+                // for(j = 0; j < results.length; j ++) {
+                //     var nullUni = results[j];
+                //     if(nullUni === null) {
+                //         delete nullUni;
+                //     }
+                // }
+                // var nullUni = results.filter(UniNonNull => UniNonNull.length === null)
+                // console.log(nullUni)
+                const nullUni = results.filter(function(value) {
+                    return value != null;
+                })
+                console.log (nullUni);
+                return res.status(200).json({
                         status: true,
-                        data: results,
+                        data: nullUni,
                         total: total,
                         pages: pages
-                    })
+                    })   
                 }
             );
         }
@@ -54,7 +66,7 @@ exports.MajorUpdate_get_avg_major = (req, res, next) => {
     MajorUpdate.findOne({ uni: code }).then(
         result => {
             var majors = result.mjs
-            console.log(result.mjs)
+            // console.log(result.mjs)
             var response = [];
             for (var i = 0; i < majors.length; i++) {
                 var mj = majors[i];
@@ -106,12 +118,13 @@ exports.MajorUpdate_post = (req, res, next) => {
                     })
                     .catch(err => {
                         return send.error(res, "SOME THING WRONG", err)
-                    })
+                })
             }
         })
         .catch(err => {
             return send.error(res, "FAIL SOME THING", err)
-        });
+        }
+    );
 };
 
 exports.MajorUpdate_delete = (req, res, next) => {
